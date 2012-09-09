@@ -144,9 +144,9 @@ public class TestGraph extends TestCase
       }
 
       @Override
-      public void operate(Node node)
+      public void operate(Vertex<Node> vertex)
       {
-         node.setIndex(counter);
+         vertex.getWrappedNode().setIndex(counter);
          counter++;
       }
    }

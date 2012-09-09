@@ -20,6 +20,7 @@ package com.mto.algorithms.graph;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -31,9 +32,15 @@ public class Graph<N>
 {
    private Vertex<N> rootVertex;
 
+   private final List<Vertex<N>> dfsVertices;
+
+   private final List<Vertex<N>> bfsVertices;
+
    public Graph(Vertex<N> rootVertex)
    {
       this.rootVertex = rootVertex;
+      this.dfsVertices = new LinkedList<Vertex<N>>();
+      this.bfsVertices = new LinkedList<Vertex<N>>();
    }
 
    public void depthFirstSearch(final Operator<N> operator)
@@ -48,7 +55,7 @@ public class Graph<N>
          Vertex<N> vertex = stack.peek();
          if(visitedVertices.get(vertex) == null)
          {
-            operator.operate(vertex.getWrappedNode());
+            operator.operate(vertex);
             visitedVertices.put(vertex, mock);
          }
          boolean childrenVisited = true;
@@ -56,7 +63,7 @@ public class Graph<N>
          {
             if(visitedVertices.get(child) == null)
             {
-               operator.operate(child.getWrappedNode());
+               operator.operate(child);
                visitedVertices.put(child, mock);
                stack.push(child);
                childrenVisited = false;
@@ -83,7 +90,7 @@ public class Graph<N>
          Vertex<N> vertex = fifoQueue.getFirst();
          if(visitedVertices.get(vertex) == null)
          {
-            operator.operate(vertex.getWrappedNode());
+            operator.operate(vertex);
             visitedVertices.put(vertex, mock);
          }
          boolean childrenVisited = true;
@@ -91,7 +98,7 @@ public class Graph<N>
          {
             if(visitedVertices.get(child) == null)
             {
-               operator.operate(child.getWrappedNode());
+               operator.operate(child);
                visitedVertices.put(child, mock);
                fifoQueue.addLast(child);
                childrenVisited = false;
@@ -104,5 +111,39 @@ public class Graph<N>
             fifoQueue.removeFirst();
          }
       }
+   }
+
+   public List<Vertex<N>> getDFSVertices()
+   {
+      if(dfsVertices.size() == 0)
+      {
+         Operator<N> operator = new Operator<N>()
+         {
+            @Override
+            public void operate(Vertex<N> vertex)
+            {
+               dfsVertices.add(vertex);
+            }
+         };
+         this.depthFirstSearch(operator);
+      }
+      return dfsVertices;
+   }
+
+   public List<Vertex<N>> getBFSVertices()
+   {
+      if(bfsVertices.size() == 0)
+      {
+         Operator<N> operator = new Operator<N>()
+         {
+            @Override
+            public void operate(Vertex<N> vertex)
+            {
+               bfsVertices.add(vertex);
+            }
+         };
+         this.breadthFirstSearch(operator);
+      }
+      return bfsVertices;
    }
 }

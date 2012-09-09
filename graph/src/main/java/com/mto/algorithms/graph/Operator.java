@@ -24,5 +24,5 @@ package com.mto.algorithms.graph;
  */
 public interface Operator<N>
 {
-   public void operate(N node);
+   public void operate(Vertex<N> vertex);
 }
